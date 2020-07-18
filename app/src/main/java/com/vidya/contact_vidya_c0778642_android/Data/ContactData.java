@@ -12,6 +12,18 @@ class ContactData {
     private String conState;
     private String conZip;
 
+    public void
+    contactData(String conFirstName, String conLastName, String conPhone, String conEmail, String conStreet, String conCity, String conState, String conZip) {
+        this.conFirstName = conFirstName;
+        this.conLastName  = conLastName;
+        this.conPhone     = conPhone;
+        this.conEmail     = conEmail;
+        this.conStreet    = conStreet;
+        this.conCity      = conCity;
+        this.conState     = conState;
+        this.conZip       = conZip;
+    }
+
     public
     String getConFirstName() {
         return conFirstName;

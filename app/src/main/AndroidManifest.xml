@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".AddEditActivity"></activity>
         <activity android:name=".ContactListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -16,6 +17,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name=".Data.ContactProvider"
+            android:authorities="com.vidya.contact_vidya_c0778642_android"
+            android:exported="false" />
     </application>
 
 </manifest>

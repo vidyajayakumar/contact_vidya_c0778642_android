@@ -1,24 +1,44 @@
 package com.vidya.contact_vidya_c0778642_android.Data;
 
+import android.content.ContentResolver;
+import android.net.Uri;
 import android.provider.BaseColumns;
 
-public
+public final
 class ContactContract {
-    private ContactContract(){}
+    public static final String CONTENT_AUTHORITY = "com.vidya.contact_vidya_c0778642_android";
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    public static final String PATH_CONTACTS = "contacts";
 
-    public static final class ContactEntry implements BaseColumns {
+    private
+    ContactContract() {
+    }
+
+    public static final
+    class ContactEntry implements BaseColumns {
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_CONTACTS);
 
         public final static String TABLE_NAME = "contacts";
 
         public final static String _ID = BaseColumns._ID;
-        public final static String COLUMN_FirstNAME ="conName";
-        public final static String COLUMN_LastNAME ="conName";
+        public final static String COLUMN_FirstNAME = "FirstName";
+        public final static String COLUMN_LastNAME = "LastName";
         public static final String COLUMN_PHONE = "phone";
         public static final String COLUMN_STREET = "street";
         public static final String COLUMN_EMAIL = "email";
         public static final String COLUMN_CITY = "city";
         public static final String COLUMN_STATE = "state";
         public static final String COLUMN_ZIP = "zip";
+
+        public static final String CONTENT_LIST_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CONTACTS;
+
+        /**
+         * The MIME type of the {@link #CONTENT_URI} for a single pet.
+         */
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CONTACTS;
+
 
     }
 }
