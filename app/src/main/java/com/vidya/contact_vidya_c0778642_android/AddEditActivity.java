@@ -105,7 +105,9 @@ class AddEditActivity extends AppCompatActivity implements LoaderManager.LoaderC
         String zipString    = mZipEditText.getText().toString().trim();
 
         if (mCurrentContactUri == null && TextUtils.isEmpty(fnameString)
-                && TextUtils.isEmpty(phoneString) || TextUtils.isEmpty(lnameString)) {
+                && TextUtils.isEmpty(phoneString) ||
+                TextUtils.isEmpty(lnameString)) {
+
             if (TextUtils.isEmpty(fnameString)) {
                 mFirstNameEditText.setError(getString(R.string.error_edittext));
                 mFirstNameEditText.requestFocus();
@@ -235,9 +237,9 @@ class AddEditActivity extends AppCompatActivity implements LoaderManager.LoaderC
     void onBackPressed() {
         // If the contact hasn't changed, continue with handling back button press
         if (!mContactHasChanged) {
-//            super.onBackPressed();
-            Intent intent = new Intent(AddEditActivity.this, ContactListActivity.class);
-            startActivity(intent);
+            super.onBackPressed();
+//            Intent intent = new Intent(AddEditActivity.this, ContactListActivity.class);
+//            startActivity(intent);
             return;
         }
 
