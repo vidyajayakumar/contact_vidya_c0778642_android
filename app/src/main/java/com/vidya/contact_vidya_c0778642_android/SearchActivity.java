@@ -84,7 +84,6 @@ class SearchActivity extends AppCompatActivity implements LoaderManager.LoaderCa
             @Override
             public
             boolean onQueryTextChange(String newText) {
-//                adapter.getFilter().filter(newText);
                 search(newText);
                 Toast.makeText(SearchActivity.this, newText, Toast.LENGTH_LONG).show();
                 return true;
@@ -103,37 +102,29 @@ class SearchActivity extends AppCompatActivity implements LoaderManager.LoaderCa
             // Setting the selection clause to null will return all words
             selectionClause  = null;
             selectionArgs[0] = "";
+
         } else {
             // Constructs a selection clause that matches the word that the user entered.
-//            selectionClause = ContactEntry.COLUMN_FirstNAME + " LIKE '%?%' OR "+ContactEntry.COLUMN_LastNAME + " LIKE '%?%' OR "+ContactEntry.COLUMN_PHONE + " LIKE '%?%'";
-            selectionClause = ContactEntry.COLUMN_FirstNAME+"=?";
+            selectionClause = ContactEntry.COLUMN_FirstNAME + " LIKE ? OR "
+                    + ContactEntry.COLUMN_LastNAME + " LIKE ? OR "
+                    + ContactEntry.COLUMN_PHONE + " LIKE ?";
             // Moves the user's input string to the selection arguments.
-            selectionArgs[0] = text;
-            conListView.setAdapter(mCursorAdapter);
+            selectionArgs[0] = "%" + text + "%";
         }
         String[] projection = {
                 ContactEntry._ID,
                 ContactEntry.COLUMN_FirstNAME,
                 ContactEntry.COLUMN_LastNAME,
                 ContactEntry.COLUMN_PHONE};
-         try {
+        try {
             Cursor mCursor = getContentResolver().query(
-                    ContactEntry.CONTENT_URI,  // The content URI of the words table
-                    projection,                       // The columns to return for each row
-                    selectionClause,                  // Either null, or the word the user entered
-                    selectionArgs,                    // Either empty, or the string the user entered
-                    sortOrder);                       // The sort order for the returned rows
-
-// Some providers return null if an error occurs, others throw an exception
-            if (null == mCursor) {
-
-            } else if (mCursor.getCount() < 1) {
-
-            } else {
-                // Insert code here to do something with the results
-                conListView.setAdapter(mCursorAdapter);
-
-            }
+                    ContactEntry.CONTENT_URI,
+                    projection,
+                    selectionClause,
+                    selectionArgs,
+                    sortOrder);
+            mCursorAdapter = new ConCursorAdapter(this, mCursor);
+            conListView.setAdapter(mCursorAdapter);
         } catch (Exception e) {
             e.printStackTrace();
         }
