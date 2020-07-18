@@ -20,14 +20,14 @@ class ContactProvider extends ContentProvider {
     public static final String LOG_TAG = ContactProvider.class.getSimpleName();
     private static final int CONTACTS = 100;
     private static final int CONTACT_ID = 101;
+    private static final int CONTACT_SEARCH = 102;
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
 
         sUriMatcher.addURI(ContactContract.CONTENT_AUTHORITY, ContactContract.PATH_CONTACTS, CONTACTS);
-
-
         sUriMatcher.addURI(ContactContract.CONTENT_AUTHORITY, ContactContract.PATH_CONTACTS + "/#", CONTACT_ID);
+        sUriMatcher.addURI(ContactContract.CONTENT_AUTHORITY, ContactContract.PATH_CONTACTS + "/s", CONTACT_SEARCH);
     }
 
     /**
@@ -45,7 +45,8 @@ class ContactProvider extends ContentProvider {
     @Nullable
     @Override
     public
-    Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+    Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection,
+                 @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         // Get readable database
         SQLiteDatabase database = mDbHelper.getReadableDatabase();
 
@@ -61,6 +62,12 @@ class ContactProvider extends ContentProvider {
                 selection = ContactEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
+                cursor = database.query(ContactEntry.TABLE_NAME, projection, selection, selectionArgs,
+                                        null, null, sortOrder);
+                break;
+            case CONTACT_SEARCH:
+                selection = ContactEntry.COLUMN_FirstNAME + " LIKE %?% OR "+ContactEntry.COLUMN_LastNAME + " LIKE %?% OR "+ContactEntry.COLUMN_PHONE + " LIKE %?%";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 cursor = database.query(ContactEntry.TABLE_NAME, projection, selection, selectionArgs,
                                         null, null, sortOrder);
                 break;
@@ -106,9 +113,9 @@ class ContactProvider extends ContentProvider {
         // If the ID is -1, then the insertion failed. Log an error and return null.
         if (id == -1) {
             Log.e(LOG_TAG, "Failed to insert row for " + uri);
-            getContext().getContentResolver().notifyChange(uri, null);
             return ContentUris.withAppendedId(uri, id);
         }
+        getContext().getContentResolver().notifyChange(uri, null);
         // Return the new URI with the ID (of the newly inserted row) appended at the end
         return ContentUris.withAppendedId(uri, id);
     }
@@ -218,6 +225,8 @@ class ContactProvider extends ContentProvider {
                 return ContactEntry.CONTENT_LIST_TYPE;
             case CONTACT_ID:
                 return ContactEntry.CONTENT_ITEM_TYPE;
+            case CONTACT_SEARCH:
+                return ContactEntry.CONTENT_SEARCH;
             default:
                 throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
         }

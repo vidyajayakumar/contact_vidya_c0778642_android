@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-import com.vidya.contact_vidya_c0778642_android.R;
 import com.vidya.contact_vidya_c0778642_android.Data.ContactContract.ContactEntry;
+import com.vidya.contact_vidya_c0778642_android.R;
 
 
 public
@@ -29,16 +29,18 @@ class ConCursorAdapter extends CursorAdapter {
     @Override
     public
     void bindView(View view, Context context, Cursor cursor) {
-        TextView         nameTextView    = view.findViewById(R.id.tv_fullname);
+        TextView nameTextView  = view.findViewById(R.id.tv_fullname);
         TextView phoneTextView = view.findViewById(R.id.tv_phone);
 
-        int nameColumnIndex  = cursor.getColumnIndex(ContactEntry.COLUMN_FirstNAME);
+        int fnameColumnIndex = cursor.getColumnIndex(ContactEntry.COLUMN_FirstNAME);
+        int lnameColumnIndex = cursor.getColumnIndex(ContactEntry.COLUMN_LastNAME);
         int phoneColumnIndex = cursor.getColumnIndex(ContactEntry.COLUMN_PHONE);
 
-        String conName  = cursor.getString(nameColumnIndex);
+        String confName = cursor.getString(fnameColumnIndex);
+        String conlName = cursor.getString(lnameColumnIndex);
         String conPhone = cursor.getString(phoneColumnIndex);
 
-        nameTextView.setText(conName);
+        nameTextView.setText(confName + " " + conlName);
         phoneTextView.setText(conPhone);
     }
 }
